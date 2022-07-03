@@ -11,7 +11,7 @@ function Home() {
   const [data, setData] = useState({
     urls: "",
     short_urls: "",
-    email: "" || urls.email
+    email: ""
   });
   const [store, setStore] = useState(urls || []);
 
