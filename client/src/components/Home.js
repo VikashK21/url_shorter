@@ -17,14 +17,6 @@ function Home() {
 
   const navigate = useNavigate();
 
-  const fullUrl = short => {
-    if (short.length > 15) {
-      let codes = short.split(".")[2];
-      setData(pre => ({ ...pre, short_urls: codes }));
-    }
-    setData(pre => ({ ...pre, urls: short }));
-  };
-
   const Submit = async e => {
     e.preventDefault();
     try {
@@ -32,7 +24,6 @@ function Home() {
       await getData(data.email);
       setData(pre => ({ ...pre, urls: "", short_urls: "" }));
     } catch (err) {
-      console.log(err);
       setData(pre => ({ ...pre, urls: "", short_urls: "" }));
     }
   };
@@ -67,7 +58,15 @@ function Home() {
             type="text"
             placeholder="https://www.example.com"
             value={data.store}
-            onChange={e => fullUrl(e.target.value)}
+            onChange={e => {
+              let codes2 = "";
+              codes2 += (Math.random() + 1).toString(36).substring(5);
+              setData(pre => ({
+                ...pre,
+                urls: e.target.value,
+                short_urls: codes2
+              }));
+            }}
             required
           />
         </Form.Group>
@@ -75,10 +74,9 @@ function Home() {
           <Form.Control
             type="text"
             placeholder="Custom code (optional)"
-            value={data.short_store}
+            value={data.short_urls}
             onChange={e =>
               setData(pre => ({ ...pre, short_urls: e.target.value }))}
-            required
           />
         </Form.Group>
         <Button
@@ -115,17 +113,18 @@ function Home() {
                   <td
                     onClick={e => {
                       const visits = async e => {
-                        const result = await axios.patch("/api/visit", {
+                        await axios.patch("/api/visit", {
                           email: store.email,
                           visits: ind
                         });
                         await getData(store.email);
-                        navigate(ele)
                       };
                       visits();
                     }}
                   >
-                    {store.short_urls[ind]}
+                    {" "}<a href={ele} target="_blank">
+                      {store.short_urls[ind]}
+                    </a>
                   </td>
                   <td>
                     {store.visits[ind]}
