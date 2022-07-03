@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import "./App.css";
 import GlobalProvider from "./context/GlobalState";
 import Routers from "./router/Routers";

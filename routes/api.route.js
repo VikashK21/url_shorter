@@ -7,3 +7,4 @@ router.patch("/visit", userCtr.visits)
 router.post("/login", userCtr.loginS);
 
 module.exports = router;
+    

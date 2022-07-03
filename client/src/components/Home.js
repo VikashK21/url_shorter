@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import React, { useContext, useEffect, useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { GlobalContext } from "../context/GlobalState";
@@ -10,38 +11,36 @@ function Home() {
   const [data, setData] = useState({
     urls: "",
     short_urls: "",
-    email: urls.email
+    email: "" || urls.email
   });
-  const [store, setStore] = useState([]);
+  const [store, setStore] = useState(urls || []);
 
   const navigate = useNavigate();
 
-  let inc = 9;
   const fullUrl = short => {
-    if (short.length > 7) {
-      let codes = short.slice(8, inc);
-      if (short.length > 16) {
-        codes = short.slice(8, 16);
-      }
-      console.log('vikash', codes);
+    if (short.length > 15) {
+      let codes = short.split(".")[2];
       setData(pre => ({ ...pre, short_urls: codes }));
     }
-    inc++;
     setData(pre => ({ ...pre, urls: short }));
   };
 
   const Submit = async e => {
     e.preventDefault();
-    console.log(data);
-    await addData(data);
-    await getData(data.email);
-    setData(pre => ({...pre, urls: "", short_urls: ""}))
+    try {
+      await addData(data);
+      await getData(data.email);
+      setData(pre => ({ ...pre, urls: "", short_urls: "" }));
+    } catch (err) {
+      console.log(err);
+      setData(pre => ({ ...pre, urls: "", short_urls: "" }));
+    }
   };
   useEffect(
     () => {
       if (typeof urls !== "object") {
-        // alert(urls);
-        console.log(urls);
+        alert(urls);
+        // eslint-disable-next-line
       }
       setStore(urls);
     },
@@ -105,19 +104,28 @@ function Home() {
           {store.hasOwnProperty("urls") &&
             store.urls.length > 0 &&
             store.urls.map((ele, ind) => {
-              console.log("vikashk");
               return (
                 <tr key={ind}>
                   <td>
                     {ind + 1}
                   </td>
-                  <td style={{wordWrap: 'break-word'}}>
+                  <td style={{ wordWrap: "break-word" }}>
                     {ele}
                   </td>
-                  <td>
-                    <a href={ele}>
-                      {store.short_urls[ind]}
-                    </a>
+                  <td
+                    onClick={e => {
+                      const visits = async e => {
+                        const result = await axios.patch("/api/visit", {
+                          email: store.email,
+                          visits: ind
+                        });
+                        await getData(store.email);
+                        navigate(ele)
+                      };
+                      visits();
+                    }}
+                  >
+                    {store.short_urls[ind]}
                   </td>
                   <td>
                     {store.visits[ind]}

@@ -1,10 +1,11 @@
+// eslint-disable-next-line
 import React, { useContext, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { GlobalContext } from "../context/GlobalState";
 
 function Login() {
-  const { getData, urls } = useContext(GlobalContext);
+  const { getData} = useContext(GlobalContext);
   const [user, setUser] = useState({ email: "", msg: "" });
   const navigate = useNavigate();
   const Login = async e => {
