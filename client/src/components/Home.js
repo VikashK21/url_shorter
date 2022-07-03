@@ -30,8 +30,8 @@ function Home() {
   useEffect(
     () => {
       if (typeof urls !== "object") {
-        console.log(urls);
-        // alert(urls);
+        // console.log(urls);
+        alert(urls);
         // eslint-disable-next-line
       }
       setStore(urls);
